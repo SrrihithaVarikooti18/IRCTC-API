@@ -204,15 +204,16 @@ Note :- Requires JWT authentication.
 
 #### Admin Routes
 
- 1. Add a new train
-    
+1.   Add a new train
+
        * HTTP Method :- POST
        * Endpoint :- http://localhost:3000/admin/addTrain
-   
-         
+
        * Request Body:
+  
+    
 ```bash
-  {
+{
     "message": "Trains added successfully",
     "trainIds": [
         {
@@ -223,7 +224,9 @@ Note :- Requires JWT authentication.
   }
 ```
 
-         * Headers:
+         * Headers :
+
+         
              * x-api-key: Your admin API key which is stored in .env
 
 
@@ -239,6 +242,8 @@ Note :- Requires JWT authentication.
  }
 ```
        * Response:
+
+       
 ```bash
 {
   "message": "Seats updated successfully"
