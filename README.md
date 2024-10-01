@@ -131,12 +131,10 @@ npm start
   "email": "john@example.com",
   "password": "password"
     }
-
-
  ```
 
 
-3. Check train availability
+  3. Check train availability
    
        * HTTP Method :- GET
        * Endpoint :- http://localhost:3000/user/availability?source=Ranchi&destination=Delhi
@@ -225,12 +223,10 @@ Note :- Requires JWT authentication.
 ```
 
          * Headers :
-
-         
              * x-api-key: Your admin API key which is stored in .env
 
 
-2. Update seat availability
+  2. Update seat availability
 
        * HTTP Method :- PUT
        * Endpoint :- http://localhost:3000/admin/update-seats/10
