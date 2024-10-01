@@ -177,7 +177,148 @@ npm start
   "message": "Seats booked successfully"
 }
 ```
+
 Note :- Requires JWT authentication.
+
+5.  Booking Details
+
+       * HTTP Method :- GET
+       * Endpoint :- http://localhost:3000/user/getAllbookings
+
+       * Response:
+  
+    
+```bash
+[
+    {
+        "booking_id": 17,
+        "number_of_seats": 50,
+        "train_number": "123123",
+        "source": "Ranchi",
+        "destination": "Delhi"
+    }
+]
+
+
+```
+
+#### Admin Routes
+
+ 1. Add a new train
+    
+       * HTTP Method :- POST
+       * Endpoint :- http://localhost:3000/admin/addTrain
+   
+         
+       * Request Body:
+```bash
+  {
+    "message": "Trains added successfully",
+    "trainIds": [
+        {
+            "trainNumber": "172622",
+            "trainId": 21
+        }
+    ]
+  }
+```
+
+         * Headers:
+             * x-api-key: Your admin API key which is stored in .env
+
+
+2. Update seat availability
+
+       * HTTP Method :- PUT
+       * Endpoint :- http://localhost:3000/admin/update-seats/10
+       * Request Body:
+```bash
+ {
+  "totalSeats": 200,
+  "availableSeats": 150
+ }
+```
+       * Response:
+```bash
+{
+  "message": "Seats updated successfully"
+}
+ ```
+        * Headers:
+            * x-api-key:  Your admin API key which is stored in .env 
+
+### Running Tests
+
+You can test all the available APIs using Postman. The endpoints are well-structured and follow RESTful conventions.
+
+```bash
+[
+  {
+    "trainNumber": "123123",
+    "source": "Ranchi",
+    "destination": "Delhi",
+    "totalSeats": 300
+  },
+  {
+    "trainNumber": "124124",
+    "source": "Ranchi",
+    "destination": "Delhi",
+    "totalSeats": 350
+  },
+  {
+    "trainNumber": "125125",
+    "source": "Ranchi",
+    "destination": "Delhi",
+    "totalSeats": 400
+  },
+  {
+    "trainNumber": "126126",
+    "source": "Ranchi",
+    "destination": "Delhi",
+    "totalSeats": 500
+  },
+  {
+    "trainNumber": "127127",
+    "source": "Ranchi",
+    "destination": "Delhi",
+    "totalSeats": 600
+  }
+]
+```
+
+### Technologies Used
+
+* Node.js: For backend logic
+* Express.js: Web framework for building the RESTful API
+* MySQL: Database for storing train, user, and booking data
+* JWT: For authentication and authorization
+* bcrypt: For hashing the passwords
+* dotenv: For managing environment variables
+
+### Future Enhancements
+* Add frontend interface using React or Angular
+* Implement seat selection
+* Add email notifications for booking confirmations
+* Integrate payment gateway
+
+### Contributing
+Feel free to fork the repository and make your contributions via pull requests. Any enhancements, bug fixes, or suggestions are welcome!
+
+
+
+
+      
+
+      
+
+
+      
+
+
+
+
+
+
 
 
 
