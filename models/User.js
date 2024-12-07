@@ -1,34 +1,20 @@
-const db = require('../config/dbconfig');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db'); // Ensure sequelize is properly imported
 
-
-class User {
-  constructor(name, email, password, role = 'user') {
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.role = role;
-  }
-
-  async save() {
-    try {
-      const [result] = await db.query(
-        'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-        [this.name, this.email, this.password, this.role]
-      );
-      return result;
-    } catch (err) {
-      throw new Error('Error saving user: ' + err.message);
-    }
-  }
-
-  static async findByEmail(email) {
-    try {
-      const [rows] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-      return rows.length > 0 ? rows[0] : null;
-    } catch (err) {
-      throw new Error('Error finding user: ' + err.message);
-    }
-  }
-}
+const User = sequelize.define('User', {
+    username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    role: {
+        type: DataTypes.ENUM('admin', 'user'),
+        defaultValue: 'user',
+    },
+});
 
 module.exports = User;

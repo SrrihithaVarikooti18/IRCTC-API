@@ -1,27 +1,33 @@
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db'); // Ensure sequelize is properly imported
+const User = require('./User'); // Import User model
+const Train = require('./Train'); // Import Train model
 
-const db = require('../config/dbconfig');
+const Booking = sequelize.define('Booking', {
+    userId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: User,
+            key: 'id',
+        },
+        allowNull: false,
+    },
+    trainId: {
+        type: DataTypes.INTEGER,
+        references: {
+            model: Train,
+            key: 'id',
+        },
+        allowNull: false,
+    },
+    seatCount: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+    },
+});
 
-
-
-const Booking = {
-  create: async (userId, trainId, seats, connection) => { 
-   // console.log('Creating booking with:', { userId, trainId, seats }); 
-    try {
-      const query = `
-        INSERT INTO bookings (user_id, train_id, seats)
-        VALUES (?, ?, ?)
-      `;
-      const [result] = await connection.query(query, [userId, trainId, seats]); 
-     // console.log('Booking created, ID:', result.insertId); // Log the booking ID
-      return result.insertId; // Return the new booking's ID
-    } catch (err) {
-     // console.error('Error creating booking:', err.message); // Log the error message
-      throw new Error('Error creating booking: ' + err.message);
-    }
-  },
-};
-
-
+// Define relationships
+Booking.belongsTo(User, { foreignKey: 'userId' });  // Establish relationship with User
+Booking.belongsTo(Train, { foreignKey: 'trainId' });  // Establish relationship with Train
 
 module.exports = Booking;
-
