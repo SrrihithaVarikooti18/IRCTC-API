@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Train = require('../models/Train');
 const Booking = require('../models/Booking');
-
+//register
 exports.register = async (req, res) => {
     try {
         const { username, password, role } = req.body;
@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
+//login
 exports.login = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -29,10 +29,10 @@ exports.login = async (req, res) => {
     }
 };
 
-
+//bookindseat based on the count
 exports.bookSeat = async (req, res) => {
   const { trainId, seatCount } = req.body;
-  const userId = req.user.id;  // Assuming the user is authenticated and `req.user` contains the user's info
+  const userId = req.user.id;  
 
   if (!trainId) {
       return res.status(400).json({ error: 'Train ID is required' });
@@ -43,13 +43,12 @@ exports.bookSeat = async (req, res) => {
   }
 
   try {
-      // Check if the train exists
+     
       const train = await Train.findByPk(trainId);
       if (!train) {
           return res.status(404).json({ error: 'Train not found' });
       }
 
-      // Check if there are enough available seats
       if (train.availableSeats < seatCount) {
           return res.status(400).json({ error: `Only ${train.availableSeats} seats available on this train` });
       }
@@ -58,10 +57,9 @@ exports.bookSeat = async (req, res) => {
       const booking = await Booking.create({
           userId,
           trainId,
-          seatCount, // Booking the specified number of seats
+          seatCount, 
       });
 
-      // Decrease available seats
       await train.decrement('availableSeats', { by: seatCount });
 
       res.status(201).json(booking);
@@ -70,7 +68,7 @@ exports.bookSeat = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
   }
 };
-
+//availability based on the no.of seat left
 exports.getAvailability = async (req, res) => {
   try {
       const { source, destination } = req.query;
@@ -79,7 +77,7 @@ exports.getAvailability = async (req, res) => {
           return res.status(400).json({ message: "Source and destination are required." });
       }
 
-      // Query the database
+     
       const trains = await Train.findAll({
           where: {
               source,
@@ -97,14 +95,14 @@ exports.getAvailability = async (req, res) => {
       res.status(500).json({ error: "Internal server error" });
   }
 };
-
+//export of booking details
 exports.getBookingDetails = async (req, res) => {
   const { bookingId } = req.params;
 
   try {
       const booking = await Booking.findByPk(bookingId, {
           include: {
-              model: Train, // Include related train details
+              model: Train, 
               attributes: ['name', 'source', 'destination'],
           },
       });
@@ -127,27 +125,26 @@ exports.getBookingDetails = async (req, res) => {
   }
 };
 exports.getBookingDetails = async (req, res) => {
-  const { bookingId } = req.params; // Get bookingId from the URL parameters
+  const { bookingId } = req.params; 
 
   try {
-      // Fetch the booking by its ID, including related train details
+    
       const booking = await Booking.findByPk(bookingId, {
           include: {
-              model: Train, // Include the Train model to get train details
-              attributes: ['name', 'source', 'destination', 'totalSeats', 'availableSeats'], // Specify which train fields to include
+              model: Train, 
+              attributes: ['name', 'source', 'destination', 'totalSeats', 'availableSeats'], 
           },
       });
 
-      // If the booking is not found, return an error message
       if (!booking) {
           return res.status(404).json({ error: 'Booking not found' });
       }
 
-      // Return the booking details along with the related train information
+  
       res.status(200).json({
           bookingId: booking.id,
           userId: booking.userId,
-          train: booking.Train, // This will include the train's name, source, destination, etc.
+          train: booking.Train, 
           seatCount: booking.seatCount,
           createdAt: booking.createdAt,
           updatedAt: booking.updatedAt,
