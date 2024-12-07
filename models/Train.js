@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // Ensure sequelize is properly imported
-
+const sequelize = require('../config/db'); 
 const Train = sequelize.define('Train', {
     name: {
         type: DataTypes.STRING,
