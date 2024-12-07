@@ -1,6 +1,4 @@
-Sure! Here's a **README** file with the correct format for your project, incorporating the necessary changes and providing all the required details:
 
----
 
 # **IRCTC Railway Management System**
 
