@@ -6,9 +6,16 @@ Sure! Here's a **README** file with the correct format for your project, incorpo
 
 ## **Problem Statement**
 
-Welcome to the IRCTC Railway Management System! The system allows users to check available trains between two stations, see how many seats are available, and book a seat if available. The system uses real-time data to handle multiple users, ensuring that race conditions are handled efficiently during seat booking.
-
-This system has two main roles: **Admin** and **User**. Admins can manage train data, while users can register, log in, check availability, and book seats.
+Hey there, Mr. X. You have been appointed to design a railway management system like IRCTC, where users can come on the platform and
+check if there are any trains available between 2 stations.
+The app will also display how many seats are available between any 2 stations and the user can book a seat if the availability > 0 after
+logging in. Since this has to be real-time and multiple users can book seats simultaneously, your code must be optimized enough to handle
+large traffic and should not fail while doing any bookings.
+If more than 1 users simultaneously try to book seats, only either one of the users should be able to book. Handle such race conditions
+while booking.
+There is a Role Based Access provision and 2 types of users would exist :
+1. Admin - can perform all operations like adding trains, updating total seats in a train, etc.
+2. Login users - can check availability of trains, seat availability, book seats, get booking details, etc.
 
 ---
 
@@ -51,8 +58,8 @@ API_KEY=your_admin_api_key
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ujjawalkumar131/IRCTC_API_WorkIndia.git
-   cd IRCTC_API_WorkIndia
+   git clone https://github.com/SrrihithaVarikooti18/IRCTC-API.git
+   cd IRCTC_API
    ```
 2. Install dependencies:
    ```bash
@@ -60,13 +67,13 @@ API_KEY=your_admin_api_key
    ```
 
 3. Set up your MySQL database:
-   - Create a MySQL database named `irctc_db`.
+   - Create a MySQL database named `irctc`.
    - Run the SQL scripts in `database/schema.sql` to create necessary tables (`users`, `trains`, `bookings`).
 
 **Example:**
 ```sql
-CREATE DATABASE irctc_db;
-USE irctc_db;
+CREATE DATABASE irctc;
+USE irctc;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -121,21 +128,21 @@ By default, the server will run on port `3000`. You can access the API at [http:
   ```json
   {
       "name": "John Doe",
-      "email": "john@example.com",
-      "password": "password"
+      "password": "password",
+      "role": "user"
   }
   ```
 
 - **Response** (Status: `201 Created`):
   ```json
   {
-      "id": 1,
-      "name": "John Doe",
-      "email": "john@example.com",
-      "role": "user",
-      "createdAt": "2024-12-07T12:34:56.789Z",
-      "updatedAt": "2024-12-07T12:34:56.789Z"
-  }
+    "id": 6,
+    "username": "John Doe",
+    "password": "$2b$10$x./sNAT/1Ae7yOuz5.utmukc71ZkY/aWeDFPBRe50/zmV5TfyIl8a",
+    "role": "user",
+    "updatedAt": "2024-12-07T07:59:55.430Z",
+    "createdAt": "2024-12-07T07:59:55.430Z"
+}
   ```
 
 #### 2. **Login**
@@ -160,7 +167,7 @@ By default, the server will run on port `3000`. You can access the API at [http:
 #### 3. **Check Train Availability**
 
 - **HTTP Method**: `GET`
-- **Endpoint**: `http://localhost:3000/user/availability?source=Ranchi&destination=Delhi`
+- **Endpoint**: `http://localhost:3000/user/availability?source=Hyderabad&destination=Bangalore`
 - **Query Parameters**:
   - `source`: Source station (e.g., "Ranchi")
   - `destination`: Destination station (e.g., "Delhi")
@@ -168,15 +175,15 @@ By default, the server will run on port `3000`. You can access the API at [http:
 - **Response**:
   ```json
   {
-      "available": true,
-      "availableTrainCount": 1,
-      "trains": [
-          {
-              "trainNumber": "123123",
-              "availableSeats": 600
-          }
-      ]
-  }
+        "id": 1,
+        "name": "Superfast Express",
+        "source": "Hyderabad",
+        "destination": "Bangalore",
+        "totalSeats": 100,
+        "availableSeats": 93,
+        "createdAt": "2024-12-07T09:52:30.000Z",
+        "updatedAt": "2024-12-07T07:50:36.000Z"
+    }
   ```
 
 #### 4. **Book Seats**
@@ -186,16 +193,22 @@ By default, the server will run on port `3000`. You can access the API at [http:
 - **Request Body** (JSON):
   ```json
   {
-      "trainId": 1,
-      "seatsToBook": 2
-  }
+  "trainId": 1,
+  "seatCount": 2
+}
+
   ```
 
 - **Response** (Status: `201 Created`):
   ```json
   {
-      "message": "Seats booked successfully"
-  }
+    "id": 7,
+    "userId": 5,
+    "trainId": 1,
+    "seatCount": 2,
+    "updatedAt": "2024-12-07T08:03:31.555Z",
+    "createdAt": "2024-12-07T08:03:31.555Z"
+}
   ```
 
 > **Note**: This request requires **JWT authentication**. Add the `Authorization` header: `Bearer <your_jwt_token>`.
@@ -223,48 +236,35 @@ By default, the server will run on port `3000`. You can access the API at [http:
 
 - **HTTP Method**: `POST`
 - **Endpoint**: `http://localhost:3000/admin/addTrain`
+
 - **Request Body** (JSON):
   ```json
   {
-      "trainNumber": "172622",
-      "source": "Ranchi",
-      "destination": "Delhi",
-      "totalSeats": 600,
-      "availableSeats": 600
-  }
+  "name": "Express 101",
+  "source": "chennai",
+  "destination": "Nellore",
+  "totalSeats": 100
+}
+
   ```
 
 - **Response** (Status: `200 OK`):
   ```json
   {
-      "message": "Train added successfully"
-  }
+    "id": 3,
+    "name": "Express 101",
+    "source": "chennai",
+    "destination": "Nellore",
+    "totalSeats": 100,
+    "availableSeats": 100,
+    "updatedAt": "2024-12-07T08:08:00.138Z",
+    "createdAt": "2024-12-07T08:08:00.138Z"
+}
   ```
 
 - **Headers**: `x-api-key: <your_admin_api_key>` (API key provided in `.env` file)
 
-#### 2. **Update Seat Availability**
 
-- **HTTP Method**: `PUT`
-- **Endpoint**: `http://localhost:3000/admin/update-seats/:trainId`
-- **Request Body** (JSON):
-  ```json
-  {
-      "totalSeats": 200,
-      "availableSeats": 150
-  }
-  ```
-
-- **Response** (Status: `200 OK`):
-  ```json
-  {
-      "message": "Seats updated successfully"
-  }
-  ```
-
-- **Headers**: `x-api-key: <your_admin_api_key>` (API key provided in `.env` file)
-
----
 
 ## **Postman Testing**
 
@@ -298,19 +298,3 @@ You can test all the available APIs using Postman. Below is an example of how yo
 
 ---
 
-## **Future Enhancements**
-
-- **Frontend Interface**: Create a frontend using **React** or **Angular** for a complete UI.
-- **Seat Selection**: Implement seat selection functionality during booking.
-- **Email Notifications**: Send booking confirmations via email.
-- **Payment Gateway Integration**: Integrate a payment system for booking confirmations.
-
----
-
-## **Contributing**
-
-Feel free to fork the repository and make contributions through pull requests. Any enhancements, bug fixes, or suggestions are welcome!
-
----
-
-Let me know if you need any changes or further modifications!
