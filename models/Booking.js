@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db'); // Ensure sequelize is properly imported
-const User = require('./User'); // Import User model
-const Train = require('./Train'); // Import Train model
+const sequelize = require('../config/db'); 
+const User = require('./User'); 
+const Train = require('./Train'); 
 
 const Booking = sequelize.define('Booking', {
     userId: {
@@ -26,8 +26,7 @@ const Booking = sequelize.define('Booking', {
     },
 });
 
-// Define relationships
-Booking.belongsTo(User, { foreignKey: 'userId' });  // Establish relationship with User
-Booking.belongsTo(Train, { foreignKey: 'trainId' });  // Establish relationship with Train
+Booking.belongsTo(User, { foreignKey: 'userId' });  
+Booking.belongsTo(Train, { foreignKey: 'trainId' });  
 
 module.exports = Booking;
